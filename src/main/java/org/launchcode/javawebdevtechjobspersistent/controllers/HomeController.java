@@ -1,7 +1,9 @@
 package org.launchcode.javawebdevtechjobspersistent.controllers;
 
+import org.launchcode.javawebdevtechjobspersistent.models.Employer;
 import org.launchcode.javawebdevtechjobspersistent.models.Job;
 import org.launchcode.javawebdevtechjobspersistent.models.data.EmployerRepository;
+import org.launchcode.javawebdevtechjobspersistent.models.data.JobRepository;
 import org.launchcode.javawebdevtechjobspersistent.models.data.SkillRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -9,8 +11,10 @@ import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
+import javax.swing.text.html.Option;
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by LaunchCode
@@ -23,6 +27,9 @@ public class HomeController {
     
     @Autowired
     private SkillRepository skillRepository;
+    
+    @Autowired
+    private JobRepository jobRepository;
 
     @RequestMapping("")
     public String index(Model model) {
@@ -49,12 +56,33 @@ public class HomeController {
             model.addAttribute("title", "Add Job");
             return "add";
         }
+    
+        Optional<Employer> optionalEmployer = employerRepository.findById(employerId);
+        if (optionalEmployer.isEmpty()){
+            model.addAttribute("title", "Employer ID invalid: " + employerId);
+            return "add";
+        }
+        
+        Employer employer = optionalEmployer.get();
+        newJob.setEmployer(employer);
+        
+        jobRepository.save(newJob);
+        
+        
+        
 
         return "redirect:";
     }
 
     @GetMapping("view/{jobId}")
     public String displayViewJob(Model model, @PathVariable int jobId) {
+        Optional<Job> optionalJob = jobRepository.findById(jobId);
+        if(optionalJob.isEmpty()){
+            model.addAttribute("title", "Job ID invalid: " + jobId);
+        }
+        
+        Job job = optionalJob.get();
+        model.addAttribute(job);
 
         return "view";
     }

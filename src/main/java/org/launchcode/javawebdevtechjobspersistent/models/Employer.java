@@ -14,8 +14,8 @@ public class Employer extends AbstractEntity {
     private String location;
     
     @OneToMany(mappedBy = "employer")
-//    @JoinColumn(name = "id")
     private List<Job> jobs = new ArrayList<>();
+//    @JoinColumn(name = "employer_id")  *error received
     
     public Employer(){}
     
@@ -26,4 +26,5 @@ public class Employer extends AbstractEntity {
     public void setLocation(String location) {
         this.location = location;
     }
+    
 }
