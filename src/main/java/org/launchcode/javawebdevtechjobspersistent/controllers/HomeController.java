@@ -2,6 +2,7 @@ package org.launchcode.javawebdevtechjobspersistent.controllers;
 
 import org.launchcode.javawebdevtechjobspersistent.models.Employer;
 import org.launchcode.javawebdevtechjobspersistent.models.Job;
+import org.launchcode.javawebdevtechjobspersistent.models.Skill;
 import org.launchcode.javawebdevtechjobspersistent.models.data.EmployerRepository;
 import org.launchcode.javawebdevtechjobspersistent.models.data.JobRepository;
 import org.launchcode.javawebdevtechjobspersistent.models.data.SkillRepository;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.swing.text.html.Option;
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -58,13 +60,19 @@ public class HomeController {
         }
     
         Optional<Employer> optionalEmployer = employerRepository.findById(employerId);
-        if (optionalEmployer.isEmpty()){
+        Iterable<Skill> optionalSkills = skillRepository.findAllById(skills);
+        if (optionalEmployer.isEmpty() ){
             model.addAttribute("title", "Employer ID invalid: " + employerId);
             return "add";
         }
         
+        List<Skill> newSkills = new ArrayList<>();
+        optionalSkills.forEach(skl -> newSkills.add(skl));
+        
+        
         Employer employer = optionalEmployer.get();
         newJob.setEmployer(employer);
+        newJob.addSkills(newSkills);
         
         jobRepository.save(newJob);
         
