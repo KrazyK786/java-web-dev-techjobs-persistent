@@ -72,7 +72,7 @@ public class HomeController {
         
         Employer employer = optionalEmployer.get();
         newJob.setEmployer(employer);
-        newJob.addSkills(newSkills);
+        newSkills.forEach(skl -> newJob.addSkills(skl));
         
         jobRepository.save(newJob);
         

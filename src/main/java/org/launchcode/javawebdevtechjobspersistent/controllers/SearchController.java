@@ -9,6 +9,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 
+import javax.validation.Valid;
+
 import static org.launchcode.javawebdevtechjobspersistent.controllers.ListController.columnChoices;
 
 /**
@@ -24,6 +26,7 @@ public class SearchController {
     @RequestMapping("")
     public String search(Model model) {
         model.addAttribute("columns", columnChoices);
+        model.addAttribute("jobs",jobRepository.findAll());
         return "search";
     }
 
